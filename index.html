@@ -14,7 +14,7 @@
         }
         img {
             width: 100%;
-            max-width: 800px;
+            max-width: 764px; /* Adjust to match your updated image */
         }
         .circle {
             position: absolute;
@@ -96,12 +96,39 @@
     </div>
 
     <script>
-        // Load external circles HTML
+        // Chart axis ranges
+        const xMin = -6, xMax = 6;
+        const yMin = -3, yMax = 4;
+
+        // Container for circles
+        const container = document.getElementById('circles-container');
+
+        // Convert (PC1, PC2) to CSS (left, top)
+        function mapToCSS(pc1, pc2) {
+            const left = ((pc1 - xMin) / (xMax - xMin)) * 100;
+            const top = 100 - ((pc2 - yMin) / (yMax - yMin)) * 100;
+            return { left: `${left}%`, top: `${top}%` };
+        }
+
+        // Load external circles data
         fetch('circles.html')
             .then(response => response.text())
             .then(data => {
-                document.getElementById('circles-container').innerHTML = data;
-                initializeCircles(); // Initialize events after loading
+                container.innerHTML = data;
+
+                // Dynamically position circles
+                const circles = container.querySelectorAll('.circle');
+                circles.forEach(circle => {
+                    const pc1 = parseFloat(circle.getAttribute('data-pc1'));
+                    const pc2 = parseFloat(circle.getAttribute('data-pc2'));
+                    const { left, top } = mapToCSS(pc1, pc2);
+
+                    // Apply styles
+                    circle.style.left = left;
+                    circle.style.top = top;
+                });
+
+                initializeCircles(); // Initialize modal and tooltip events
             });
 
         function initializeCircles() {
