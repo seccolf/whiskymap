@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whisky PCA Visualization</title>
+    <title>Whisky Map</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,14 +22,19 @@
             height: 15px;
             border-radius: 50%;
             cursor: pointer;
-            transform: translate(-10%, -10%);
-            background-color: rgba(0, 0, 255, 0.6);
+            transform: translate(-50%, -50%);
             transition: 0.3s ease;
         }
         .circle:hover {
-            background-color: rgba(0, 255, 0, 0.8);
-            transform: scale(2.5);
+            transform: scale(1.2);
         }
+        /* Define family colors */
+        .family1 { background-color: rgba(255, 0, 0, 0.7); }
+        .family2 { background-color: rgba(0, 255, 0, 0.7); }
+        .family3 { background-color: rgba(0, 0, 255, 0.7); }
+        .family4 { background-color: rgba(255, 255, 0, 0.7); }
+        .family5 { background-color: rgba(255, 0, 255, 0.7); }
+        .family6 { background-color: rgba(0, 255, 255, 0.7); }
         .tooltip {
             position: absolute;
             background-color: rgba(0, 0, 0, 0.7);
@@ -58,6 +63,11 @@
             cursor: pointer;
             float: right;
         }
+        .modal img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
         .overlay {
             position: fixed;
             top: 0;
@@ -73,10 +83,7 @@
 <body>
     <div class="chart-container">
         <img src="3dpca_6.png" alt="PCA Clustering">
-        <!-- Add circles to represent each whisky -->
-        <div class="circle" style="top: 40%; left: 30%;" data-name="Laphroaig 10" data-info="Laphroaig 10 is a smoky and peaty whisky."></div>
-        <div class="circle" style="top: 50%; left: 50%;" data-name="Ardbeg 10" data-info="Ardbeg 10 is a bold whisky with a rich flavor."></div>
-        <!-- Add more circles with positions and data -->
+        <div id="circles-container"></div> <!-- Container for dynamic circles -->
         <div class="tooltip" id="tooltip"></div>
     </div>
 
@@ -85,57 +92,71 @@
         <button class="close" id="closeModal">X</button>
         <h2 id="modalTitle"></h2>
         <p id="modalInfo"></p>
+        <img id="modalImage" src="" alt="Whisky Image">
     </div>
 
     <script>
-        const circles = document.querySelectorAll('.circle');
-        const tooltip = document.getElementById('tooltip');
-        const modal = document.getElementById('modal');
-        const overlay = document.getElementById('overlay');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalInfo = document.getElementById('modalInfo');
-        const closeModal = document.getElementById('closeModal');
-
-        // Show tooltip on hover
-        circles.forEach(circle => {
-            circle.addEventListener('mouseover', (e) => {
-                const name = circle.getAttribute('data-name');
-                tooltip.textContent = name;
-                tooltip.style.display = 'block';
-                tooltip.style.top = e.pageY + 'px';
-                tooltip.style.left = e.pageX + 'px';
+        // Load external circles HTML
+        fetch('circles.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('circles-container').innerHTML = data;
+                initializeCircles(); // Initialize events after loading
             });
 
-            circle.addEventListener('mousemove', (e) => {
-                tooltip.style.top = e.pageY + 'px';
-                tooltip.style.left = e.pageX + 'px';
+        function initializeCircles() {
+            const circles = document.querySelectorAll('.circle');
+            const tooltip = document.getElementById('tooltip');
+            const modal = document.getElementById('modal');
+            const overlay = document.getElementById('overlay');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalInfo = document.getElementById('modalInfo');
+            const modalImage = document.getElementById('modalImage');
+            const closeModal = document.getElementById('closeModal');
+
+            // Show tooltip on hover
+            circles.forEach(circle => {
+                circle.addEventListener('mouseover', (e) => {
+                    const name = circle.getAttribute('data-name');
+                    tooltip.textContent = name;
+                    tooltip.style.display = 'block';
+                    tooltip.style.top = e.pageY + 'px';
+                    tooltip.style.left = e.pageX + 'px';
+                });
+
+                circle.addEventListener('mousemove', (e) => {
+                    tooltip.style.top = e.pageY + 'px';
+                    tooltip.style.left = e.pageX + 'px';
+                });
+
+                circle.addEventListener('mouseout', () => {
+                    tooltip.style.display = 'none';
+                });
+
+                // Show modal on click
+                circle.addEventListener('click', () => {
+                    const name = circle.getAttribute('data-name');
+                    const info = circle.getAttribute('data-info');
+                    const image = circle.getAttribute('data-image');
+                    modalTitle.textContent = name;
+                    modalInfo.textContent = info;
+                    modalImage.src = image;
+                    modal.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
             });
 
-            circle.addEventListener('mouseout', () => {
-                tooltip.style.display = 'none';
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
             });
 
-            // Show modal on click
-            circle.addEventListener('click', () => {
-                const name = circle.getAttribute('data-name');
-                const info = circle.getAttribute('data-info');
-                modalTitle.textContent = name;
-                modalInfo.textContent = info;
-                modal.style.display = 'block';
-                overlay.style.display = 'block';
+            overlay.addEventListener('click', () => {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
             });
-        });
-
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-            overlay.style.display = 'none';
-        });
-
-        overlay.addEventListener('click', () => {
-            modal.style.display = 'none';
-            overlay.style.display = 'none';
-        });
+        }
     </script>
 </body>
 </html>
