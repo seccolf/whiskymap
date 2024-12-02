@@ -11,7 +11,6 @@
             display: flex;
             justify-content: center; /* Horizontally center the container */
             align-items: top;   /* Vertically center the container */
-            /* background-color: #f4f4f4;*/
         }
         .chart-container {
             position: relative;
@@ -115,40 +114,45 @@
             return { left: `${left}px`, top: `${top}px` };
         }
 
+        // Position circles on the image
+        function positionCircles() {
+            const imgWidth = chartImage.offsetWidth;
+            const imgHeight = chartImage.offsetHeight;
+
+            const circles = circlesContainer.querySelectorAll('.circle');
+            circles.forEach(circle => {
+                const pc1 = parseFloat(circle.getAttribute('data-pc1'));
+                const pc2 = parseFloat(circle.getAttribute('data-pc2'));
+                const { left, top } = mapToPixels(pc1, pc2, imgWidth, imgHeight);
+
+                circle.style.left = left;
+                circle.style.top = top;
+
+                // Modal functionality
+                circle.addEventListener('click', () => {
+                    const name = circle.getAttribute('data-name');
+                    const info = circle.getAttribute('data-info');
+                    const image = circle.getAttribute('data-image');
+
+                    modalTitle.textContent = name;
+                    modalInfo.textContent = info;
+                    modalImage.src = image;
+                    modal.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
+            });
+        }
+
         // Load external circles data
         fetch('circles.html')
             .then(response => response.text())
             .then(data => {
                 circlesContainer.innerHTML = data;
-
-                chartImage.onload = () => {
-                    const imgWidth = chartImage.offsetWidth;
-                    const imgHeight = chartImage.offsetHeight;
-
-                    const circles = circlesContainer.querySelectorAll('.circle');
-                    circles.forEach(circle => {
-                        const pc1 = parseFloat(circle.getAttribute('data-pc1'));
-                        const pc2 = parseFloat(circle.getAttribute('data-pc2'));
-                        const { left, top } = mapToPixels(pc1, pc2, imgWidth, imgHeight);
-
-                        circle.style.left = left;
-                        circle.style.top = top;
-
-                        // Modal functionality
-                        circle.addEventListener('click', () => {
-                            const name = circle.getAttribute('data-name');
-                            const info = circle.getAttribute('data-info');
-                            const image = circle.getAttribute('data-image');
-
-                            modalTitle.textContent = name;
-                            modalInfo.textContent = info;
-                            modalImage.src = image;
-                            modal.style.display = 'block';
-                            overlay.style.display = 'block';
-                        });
-                    });
-                };
+                chartImage.onload = positionCircles; // Ensure positioning only after image load
             });
+
+        // Reposition circles on window resize
+        window.addEventListener('resize', positionCircles);
 
         // Close modal and overlay
         closeModal.addEventListener('click', () => {
