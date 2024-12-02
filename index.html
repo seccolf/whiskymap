@@ -11,10 +11,11 @@
         .chart-container {
             position: relative;
             text-align: center;
+            display: inline-block; /* Ensures the container wraps tightly around the image */
         }
         img {
-            width: 100%;
-            max-width: 764px; /* Adjust to match your updated image */
+            max-width: 100%; /* Ensure the image scales responsively */
+            height: auto;
         }
         .circle {
             position: absolute;
@@ -35,15 +36,6 @@
         .family4 { background-color: rgba(255, 255, 0, 0.7); }
         .family5 { background-color: rgba(255, 0, 255, 0.7); }
         .family6 { background-color: rgba(0, 255, 255, 0.7); }
-        .tooltip {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            display: none;
-            pointer-events: none;
-        }
         .modal {
             position: fixed;
             top: 50%;
@@ -82,9 +74,8 @@
 </head>
 <body>
     <div class="chart-container">
-        <img src="3dpca_6.png" alt="PCA Clustering">
+        <img id="chartImage" src="3dpca_6.png" alt="PCA Clustering">
         <div id="circles-container"></div> <!-- Container for dynamic circles -->
-        <div class="tooltip" id="tooltip"></div>
     </div>
 
     <div class="overlay" id="overlay"></div>
@@ -100,90 +91,70 @@
         const xMin = -6, xMax = 6;
         const yMin = -3, yMax = 4;
 
-        // Container for circles
-        const container = document.getElementById('circles-container');
+        const circlesContainer = document.getElementById('circles-container');
+        const chartImage = document.getElementById('chartImage');
+        const modal = document.getElementById('modal');
+        const overlay = document.getElementById('overlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalInfo = document.getElementById('modalInfo');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.getElementById('closeModal');
 
-        // Convert (PC1, PC2) to CSS (left, top)
-        function mapToCSS(pc1, pc2) {
-            const left = ((pc1 - xMin) / (xMax - xMin)) * 100;
-            const top = 100 - ((pc2 - yMin) / (yMax - yMin)) * 100;
-            return { left: `${left}%`, top: `${top}%` };
+        // Map (PC1, PC2) to pixel positions
+        function mapToPixels(pc1, pc2, imgWidth, imgHeight) {
+            const xRatio = (pc1 - xMin) / (xMax - xMin);
+            const yRatio = (pc2 - yMin) / (yMax - yMin);
+
+            const left = xRatio * imgWidth;
+            const top = (1 - yRatio) * imgHeight; // Flip Y-axis
+            return { left: `${left}px`, top: `${top}px` };
         }
 
         // Load external circles data
         fetch('circles.html')
             .then(response => response.text())
             .then(data => {
-                container.innerHTML = data;
+                circlesContainer.innerHTML = data;
 
-                // Dynamically position circles
-                const circles = container.querySelectorAll('.circle');
-                circles.forEach(circle => {
-                    const pc1 = parseFloat(circle.getAttribute('data-pc1'));
-                    const pc2 = parseFloat(circle.getAttribute('data-pc2'));
-                    const { left, top } = mapToCSS(pc1, pc2);
+                chartImage.onload = () => {
+                    const imgWidth = chartImage.offsetWidth;
+                    const imgHeight = chartImage.offsetHeight;
 
-                    // Apply styles
-                    circle.style.left = left;
-                    circle.style.top = top;
-                });
+                    const circles = circlesContainer.querySelectorAll('.circle');
+                    circles.forEach(circle => {
+                        const pc1 = parseFloat(circle.getAttribute('data-pc1'));
+                        const pc2 = parseFloat(circle.getAttribute('data-pc2'));
+                        const { left, top } = mapToPixels(pc1, pc2, imgWidth, imgHeight);
 
-                initializeCircles(); // Initialize modal and tooltip events
+                        circle.style.left = left;
+                        circle.style.top = top;
+
+                        // Modal functionality
+                        circle.addEventListener('click', () => {
+                            const name = circle.getAttribute('data-name');
+                            const info = circle.getAttribute('data-info');
+                            const image = circle.getAttribute('data-image');
+
+                            modalTitle.textContent = name;
+                            modalInfo.textContent = info;
+                            modalImage.src = image;
+                            modal.style.display = 'block';
+                            overlay.style.display = 'block';
+                        });
+                    });
+                };
             });
 
-        function initializeCircles() {
-            const circles = document.querySelectorAll('.circle');
-            const tooltip = document.getElementById('tooltip');
-            const modal = document.getElementById('modal');
-            const overlay = document.getElementById('overlay');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalInfo = document.getElementById('modalInfo');
-            const modalImage = document.getElementById('modalImage');
-            const closeModal = document.getElementById('closeModal');
+        // Close modal and overlay
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
 
-            // Show tooltip on hover
-            circles.forEach(circle => {
-                circle.addEventListener('mouseover', (e) => {
-                    const name = circle.getAttribute('data-name');
-                    tooltip.textContent = name;
-                    tooltip.style.display = 'block';
-                    tooltip.style.top = e.pageY + 'px';
-                    tooltip.style.left = e.pageX + 'px';
-                });
-
-                circle.addEventListener('mousemove', (e) => {
-                    tooltip.style.top = e.pageY + 'px';
-                    tooltip.style.left = e.pageX + 'px';
-                });
-
-                circle.addEventListener('mouseout', () => {
-                    tooltip.style.display = 'none';
-                });
-
-                // Show modal on click
-                circle.addEventListener('click', () => {
-                    const name = circle.getAttribute('data-name');
-                    const info = circle.getAttribute('data-info');
-                    const image = circle.getAttribute('data-image');
-                    modalTitle.textContent = name;
-                    modalInfo.textContent = info;
-                    modalImage.src = image;
-                    modal.style.display = 'block';
-                    overlay.style.display = 'block';
-                });
-            });
-
-            // Close modal
-            closeModal.addEventListener('click', () => {
-                modal.style.display = 'none';
-                overlay.style.display = 'none';
-            });
-
-            overlay.addEventListener('click', () => {
-                modal.style.display = 'none';
-                overlay.style.display = 'none';
-            });
-        }
+        overlay.addEventListener('click', () => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        });
     </script>
 </body>
 </html>
