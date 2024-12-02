@@ -33,6 +33,18 @@
         .circle:hover {
             transform: scale(1.2);
         }
+        /* Tooltip Styling */
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 5px;
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            white-space: nowrap;
+        }
         /* Define family colors */
         .family1 { background-color: rgba(255, 0, 0, 0.7); }
         .family2 { background-color: rgba(0, 255, 0, 0.7); }
@@ -80,6 +92,7 @@
     <div class="chart-container">
         <img id="chartImage" src="3dpca_6.png" alt="PCA Clustering">
         <div id="circles-container"></div> <!-- Container for dynamic circles -->
+        <div class="tooltip" id="tooltip"></div> <!-- Tooltip -->
     </div>
 
     <div class="overlay" id="overlay"></div>
@@ -99,6 +112,7 @@
         const chartImage = document.getElementById('chartImage');
         const modal = document.getElementById('modal');
         const overlay = document.getElementById('overlay');
+        const tooltip = document.getElementById('tooltip');
         const modalTitle = document.getElementById('modalTitle');
         const modalInfo = document.getElementById('modalInfo');
         const modalImage = document.getElementById('modalImage');
@@ -127,6 +141,24 @@
 
                 circle.style.left = left;
                 circle.style.top = top;
+
+                // Tooltip functionality
+                circle.addEventListener('mouseover', (e) => {
+                    const name = circle.getAttribute('data-name');
+                    tooltip.textContent = name;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                });
+
+                circle.addEventListener('mousemove', (e) => {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY + 10}px`;
+                });
+
+                circle.addEventListener('mouseout', () => {
+                    tooltip.style.display = 'none';
+                });
 
                 // Modal functionality
                 circle.addEventListener('click', () => {
