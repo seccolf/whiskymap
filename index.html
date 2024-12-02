@@ -114,7 +114,7 @@
             return { left: `${left}px`, top: `${top}px` };
         }
 
-        // Position circles on the image
+        // Position circles dynamically
         function positionCircles() {
             const imgWidth = chartImage.offsetWidth;
             const imgHeight = chartImage.offsetHeight;
@@ -143,12 +143,21 @@
             });
         }
 
+        // Ensure image dimensions are ready
+        function ensureImageLoaded() {
+            if (chartImage.complete && chartImage.naturalHeight !== 0) {
+                positionCircles();
+            } else {
+                chartImage.onload = positionCircles;
+            }
+        }
+
         // Load external circles data
         fetch('circles.html')
             .then(response => response.text())
             .then(data => {
                 circlesContainer.innerHTML = data;
-                chartImage.onload = positionCircles; // Ensure positioning only after image load
+                ensureImageLoaded(); // Ensure positioning only after image is ready
             });
 
         // Reposition circles on window resize
