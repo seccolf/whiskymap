@@ -38,12 +38,10 @@
             position: absolute;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 5px 8px;
+            padding: 5px;
             border-radius: 5px;
             pointer-events: none;
             display: none;
-            z-index: 20;
-            white-space: nowrap;
         }
         /* Define family colors */
         .family1 { background-color: rgba(255, 0, 0, 0.7); }
@@ -147,13 +145,13 @@
                     const name = circle.getAttribute('data-name');
                     tooltip.textContent = name;
                     tooltip.style.display = 'block';
-                    tooltip.style.left = `${e.pageX + 10}px`;
-                    tooltip.style.top = `${e.pageY + 10}px`;
+                    tooltip.style.left = e.pageX + 'px';
+                    tooltip.style.top = e.pageY + 'px';
                 });
 
                 circle.addEventListener('mousemove', (e) => {
-                    tooltip.style.left = `${e.pageX + 10}px`;
-                    tooltip.style.top = `${e.pageY + 10}px`;
+                    tooltip.style.left = e.pageX + 'px';
+                    tooltip.style.top = e.pageY + 'px';
                 });
 
                 circle.addEventListener('mouseout', () => {
