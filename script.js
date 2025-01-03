@@ -52,14 +52,24 @@ function createCircles() {
 
 // Function to show the modal with whisky information
 function showModal(whisky) {
-  whiskyImage.src = whisky.image;
+  const whiskyTitle = document.getElementById("whisky-title");
+  const whiskyImage = document.getElementById("whisky-image");
+  const whiskyInfo = document.getElementById("whisky-info");
+  
+  whiskyTitle.textContent = `${whisky.name}'s flavor profile`; // Set the title
+  whiskyImage.src = whisky.image; // Set the image
   whiskyImage.style.width = "auto"; // Reset width
   whiskyImage.style.height = "auto"; // Reset height
-  whiskyInfo.textContent = whisky.info;
+  // Set the whisky info with additional lines
+  whiskyInfo.innerHTML = `
+    ${whisky.info}<br>
+    ${whisky.name} belongs to cluster ${whisky.family}, similar to ${whisky.examples}<br>
+    <a href="https://whiskyanalysis.com/" target="_blank" style="color: blue; text-decoration: none;">
+      Metacritic score: </a> ${whisky.score} &plusmn; ${whisky.scorestddev} (out of 10)
+  `;
 
   modal.style.display = "flex";
 }
-
 // Function to close the modal
 function closeModal() {
   modal.style.display = "none";

@@ -102,7 +102,21 @@ body {
 
 /* Whisky image */
 #whisky-image {
-  max-width: 100%; /* Scale the image to fit within the modal content */
-  max-height: 100%; /* Scale the image proportionally to fit within the modal */
+  max-width: 80%; /* Scale the image to fit within the modal content */
+  max-height: 80%; /* Scale the image proportionally to fit within the modal */
   object-fit: contain; /* Maintain aspect ratio */
+}
+
+#whisky-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+#whisky-info {
+  font-size: 20px; /* Increase the font size (adjust as needed) */
+  color: #333; /* Optional: Change text color for better visibility */
+  margin-top: 10px; /* Optional: Add space between the info and other elements */
+  line-height: 1.5; /* Improve readability with increased line height */
 }
