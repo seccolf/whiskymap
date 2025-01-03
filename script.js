@@ -53,6 +53,8 @@ function createCircles() {
 // Function to show the modal with whisky information
 function showModal(whisky) {
   whiskyImage.src = whisky.image;
+  whiskyImage.style.width = "auto"; // Reset width
+  whiskyImage.style.height = "auto"; // Reset height
   whiskyInfo.textContent = whisky.info;
 
   modal.style.display = "flex";
