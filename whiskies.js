@@ -194,7 +194,7 @@ const whiskies=[
   {name: "Bruichladdich Black Art 4.1", x: 0.755, y:0.291, image:"images/BruichladdichBlackArt4.1.jpg", info:"27 reviewers have identified notes of oak, chocolate, plum, spice and oily in this whisky", score:"9.03", scorestddev:"0.24", family:"C", examples:"e.g., Dalmore 15, Glenallachie 15 and Macallan 18"},
   {name: "Glenfarclas 10", x: 0.736, y:0.440, image:"images/Glenfarclas10.jpg", info:"29 reviewers have identified notes of vanilla, sherry, dry, spice and oak in this whisky", score:"8.35", scorestddev:"0.33", family:"C", examples:"e.g., Dalmore 15, Glenallachie 15 and Macallan 18"},
   {name: "Glengoyne 18", x: 0.842, y:0.392, image:"images/Glengoyne18.jpg", info:"26 reviewers have identified notes of oak, honey, vanilla, caramel and spice in this whisky", score:"8.61", scorestddev:"0.34", family:"C", examples:"e.g., Dalmore 15, Glenallachie 15 and Macallan 18"},
-  {name: "Glenallachie 15", x: 1.034, y:0.235, image:"images/Glenallachie15.jpg", info:"22 reviewers have identified notes of raisin, spice, dark chocolate, cinnamon and oak in this whisky", score:"8.50", scorestddev:"0.60", family:"C", examples:"e.g., Dalmore 15 and Macallan 18"},
+  {name: "Glenallachie 15", x: 0.88, y:0.235, image:"images/Glenallachie15.jpg", info:"22 reviewers have identified notes of raisin, spice, dark chocolate, cinnamon and oak in this whisky", score:"8.50", scorestddev:"0.60", family:"C", examples:"e.g., Dalmore 15 and Macallan 18"},
 
 ]
 },

@@ -2,21 +2,45 @@
 body {
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  display: block;
+  overflow: auto; /* Enable scrolling */
+  height: auto;
   background-color: #f8f8f8;
-  overflow: hidden;
   box-sizing: border-box; /* Consistent box sizing */
+  font-family: "Korolev Thin", sans-serif; /* Apply Korolev font */
+  font-weight: 200;
 }
 
-/* Circle container */
+
+/* Page Header Styles */
+.page-header {
+  position: absolute;
+  top: 10px; /* Adjust position from the top */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #333;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  margin: 0;
+  font-weight: 300;
+}
+
+.page-header h2 {
+  font-size: 20px;
+  margin: 5px 0 0;
+  font-weight: 200;
+}
+
 #circle-container {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  width: 100vw; /* Adjust width to allow horizontal scrolling */
+  height: calc(100vh - 80px); /* Reduce height by the height of the title and some padding */
+  margin-top: 80px; /* Add space below the title to align properly */
+  /* height: 100vh; */ /* Adjust height to allow vertical scrolling */
+  overflow: auto; /* Ensure container allows scrolling if necessary */
   z-index: 0;
 }
 
@@ -109,7 +133,6 @@ body {
 
 #whisky-title {
   font-size: 24px;
-  font-weight: bold;
   margin-bottom: 10px;
   color: #333;
 }
@@ -119,4 +142,55 @@ body {
   color: #333; /* Optional: Change text color for better visibility */
   margin-top: 10px; /* Optional: Add space between the info and other elements */
   line-height: 1.5; /* Improve readability with increased line height */
+}
+
+/* Horizontal Arrow */
+.horizontal-arrow {
+  position: absolute;
+  bottom: 10px; /* Position at the bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 16px;
+  /* font-weight: bold; */
+  color: #333;
+  /* background-color: rgba(255, 255, 255, 0.8); */ /* Slightly transparent */
+  padding: 10px;
+  /* border-radius: 8px;*/
+  /* border: 2px solid #ddd; */
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+.arrow-left,
+.arrow-right {
+  flex: 1;
+  text-align: center;
+}
+
+/* Vertical Arrow */
+.vertical-arrow {
+  position: absolute;
+  left: 70px; /* Position on the left side */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: space-between;
+  height: 80%; /* Stretch to percentage height of the page */
+  font-size: 16px;
+  color: #333;
+  padding: 10px;
+}
+
+.arrow-up,
+.arrow-down {
+  text-align: center;
+  writing-mode: vertical-rl; /* Make the text sideways */
+  transform: rotate(180deg); /* Flip the text direction */
+}
+
+#whisky-title, #whisky-info, .tooltip, .horizontal-arrow, .vertical-arrow, .page-header, .page-header h1, .page header h2 {
+  font-family: "Korolev Thin", sans-serif;
 }
