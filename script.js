@@ -50,6 +50,18 @@ function createCircles() {
   });
 }
 
+// Dropdown
+document.getElementById("recommendation").addEventListener("click", showComingSoon);
+document.getElementById("whisky-search").addEventListener("click", showComingSoon);
+document.getElementById("technical-info").addEventListener("click", showComingSoon);
+document.getElementById("github").addEventListener("click", showComingSoon);
+
+// Function for dropdown menu click actions
+function showComingSoon(event) {
+  event.preventDefault();
+  alert("Coming soon!");
+}
+
 // Function to show the modal with whisky information
 function showModal(whisky) {
   const whiskyTitle = document.getElementById("whisky-title");
