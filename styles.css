@@ -335,3 +335,28 @@ body {
   color: rgba(0, 0, 0, 0.9); /* Darker text on hover */
   font-weight: bold;
 }
+
+/* Highlight circles when hovering over legend */
+.highlighted {
+  transform: scale(1.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+/* Make whisky labels stand out */
+.highlighted-label {
+  color: rgba(0, 0, 0, 1);
+  font-weight: bold;
+}
+
+/* Cluster description box */
+.cluster-description {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+  display: none;
+  z-index: 1100;
+}

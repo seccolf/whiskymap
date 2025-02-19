@@ -109,7 +109,7 @@ const whiskies=[
 
     {
     family: "4",
-    color: "rgba(102, 99, 90 , 1)",
+    color: "rgba(102, 99, 90, 1)",
     members:[
       {name: "Lagavulin 16", x: 0.263, y:0.319, image:"images/Lagavulin16.jpg", info:"189 reviewers have identified notes of peat, smoke, sherry, leather and vanilla in this whisky", score:"9.10", scorestddev:"0.35", family:"J", examples:"e.g., Ardbeg 10 and Laphroaig 10"},
   {name: "Ardbeg 10", x: 0.227, y:0.361, image:"images/Ardbeg10.jpg", info:"189 reviewers have identified notes of smoke, peat, oak, pepper and vanilla in this whisky", score:"8.88", scorestddev:"0.35", family:"J", examples:"e.g., Lagavulin 16 and Laphroaig 10"},

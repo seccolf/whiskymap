@@ -109,12 +109,89 @@ const whiskyClusters = [
   { color: "rgba(255, 195, 0, 1)", name: "Cluster B", description: "Light and floral whiskies, often with honey and citrus notes." },
   { color: "rgba(239, 218, 156, 1)", name: "Cluster C", description: "Smooth and sweet whiskies with notes of caramel and vanilla." },
   { color: "rgba(175, 124, 3, 1)", name: "Cluster D", description: "Balanced whiskies with a mix of fruit, spice, and light smoke." },
-  { color: "rgba(102, 99, 90 , 1)", name: "Cluster E", description: "Peaty and smoky whiskies with strong earthy undertones." },
+  { color: "rgba(102, 99, 90, 1)", name: "Cluster E", description: "Peaty and smoky whiskies with strong earthy undertones." },
   { color: "rgba(88, 24, 69, 1)", name: "Cluster F", description: "Robust, intense whiskies with deep sherry and dried fruit notes." },
   { color: "rgba(144, 12, 63, 1)", name: "Cluster G", description: "Complex whiskies with a mix of spice, sweetness, and dark fruits." }
 ];
 
 // Create Legend
+// Function to normalize color formatting for comparison
+function rgbToRgba(color) {
+  if (color.startsWith("rgb(")) {
+    return color.replace("rgb(", "rgba(").replace(")", ", 1)");
+  }
+  return color;
+}
+
+// Function to highlight whisky circles and labels based on cluster
+function highlightCluster(color, description) {
+  const circles = document.querySelectorAll(".circle");
+  let clusterCircles = [];
+
+  circles.forEach(circle => {
+    // Convert to matching rgba format
+    if (rgbToRgba(circle.style.backgroundColor) === color) {
+      circle.classList.add("highlighted");
+      circle.querySelector(".whisky-label").classList.add("highlighted-label");
+      clusterCircles.push(circle);
+    }
+  });
+
+  if (clusterCircles.length > 0) {
+    showClusterDescription(clusterCircles, description);
+  }
+}
+
+// Function to remove highlight from all circles
+function removeHighlight(color) {
+  const circles = document.querySelectorAll(".circle");
+
+  circles.forEach(circle => {
+    if (rgbToRgba(circle.style.backgroundColor) === color) {
+      circle.classList.remove("highlighted");
+      circle.querySelector(".whisky-label").classList.remove("highlighted-label");
+    }
+  });
+
+  hideClusterDescription();
+}
+
+// Function to show cluster description under the group of circles
+function showClusterDescription(clusterCircles, description) {
+  let avgX = 0, avgY = 0;
+
+  clusterCircles.forEach(circle => {
+    const rect = circle.getBoundingClientRect();
+    avgX += rect.left + rect.width / 2;
+    avgY += rect.top + rect.height / 2;
+  });
+
+  avgX /= clusterCircles.length;
+  avgY /= clusterCircles.length;
+
+  let descriptionBox = document.getElementById("cluster-description");
+  if (!descriptionBox) {
+    descriptionBox = document.createElement("div");
+    descriptionBox.id = "cluster-description";
+    descriptionBox.className = "cluster-description";
+    document.body.appendChild(descriptionBox);
+  }
+
+  descriptionBox.textContent = description;
+  descriptionBox.style.left = `${avgX - 100}px`;
+  descriptionBox.style.top = `${avgY + 100}px`; // Position below the cluster
+  descriptionBox.style.display = "block";
+}
+
+// Function to hide cluster description
+function hideClusterDescription() {
+  const descriptionBox = document.getElementById("cluster-description");
+  if (descriptionBox) {
+    descriptionBox.style.display = "none";
+  }
+}
+
+// Apply interactions to legend
 const legendContainer = document.getElementById("legend-container");
 
 whiskyClusters.forEach(cluster => {
@@ -125,25 +202,9 @@ whiskyClusters.forEach(cluster => {
     <span>${cluster.name}</span>
   `;
 
-  // Show popup on click
-  legendItem.addEventListener("click", () => {
-    const popup = document.getElementById("legend-popup");
-    popup.textContent = cluster.description;
-    popup.style.display = "block";
-  });
+  // Apply hover events
+  legendItem.addEventListener("mouseenter", () => highlightCluster(cluster.color, cluster.description));
+  legendItem.addEventListener("mouseleave", () => removeHighlight(cluster.color));
 
   legendContainer.appendChild(legendItem);
 });
-
-// Close popup when clicking outside
-document.addEventListener("click", (event) => {
-  if (!event.target.closest(".legend-item")) {
-    document.getElementById("legend-popup").style.display = "none";
-  }
-});
-
-// Create Popup
-const popup = document.createElement("div");
-popup.id = "legend-popup";
-document.body.appendChild(popup);
-
