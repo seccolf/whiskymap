@@ -254,3 +254,54 @@ body {
   display: block;
 }
 
+/* Legend Container */
+#legend-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 1000;
+}
+
+/* Legend Items */
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.legend-item:hover {
+  transform: scale(1.1);
+  background: rgba(200, 200, 200, 0.5);
+}
+
+/* Legend Circles */
+.legend-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Legend Popup */
+#legend-popup {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1100;
+}

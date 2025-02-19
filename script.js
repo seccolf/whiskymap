@@ -89,3 +89,48 @@ function closeModal() {
 
 // Wait until the window has loaded to ensure proper container dimensions
 window.onload = createCircles;
+
+// Whisky Clusters
+const whiskyClusters = [
+  { color: "rgba(255, 87, 51, 1)", name: "Cluster A", description: "Rich, spicy, full-bodied whiskies with strong sherry influence." },
+  { color: "rgba(255, 195, 0, 1)", name: "Cluster B", description: "Light and floral whiskies, often with honey and citrus notes." },
+  { color: "rgba(239, 218, 156, 1)", name: "Cluster C", description: "Smooth and sweet whiskies with notes of caramel and vanilla." },
+  { color: "rgba(175, 124, 3, 1)", name: "Cluster D", description: "Balanced whiskies with a mix of fruit, spice, and light smoke." },
+  { color: "rgba(102, 99, 90 , 1)", name: "Cluster E", description: "Peaty and smoky whiskies with strong earthy undertones." },
+  { color: "rgba(88, 24, 69, 1)", name: "Cluster F", description: "Robust, intense whiskies with deep sherry and dried fruit notes." },
+  { color: "rgba(144, 12, 63, 1)", name: "Cluster G", description: "Complex whiskies with a mix of spice, sweetness, and dark fruits." }
+];
+
+// Create Legend
+const legendContainer = document.getElementById("legend-container");
+
+whiskyClusters.forEach(cluster => {
+  const legendItem = document.createElement("div");
+  legendItem.className = "legend-item";
+  legendItem.innerHTML = `
+    <div class="legend-circle" style="background: ${cluster.color};"></div>
+    <span>${cluster.name}</span>
+  `;
+
+  // Show popup on click
+  legendItem.addEventListener("click", () => {
+    const popup = document.getElementById("legend-popup");
+    popup.textContent = cluster.description;
+    popup.style.display = "block";
+  });
+
+  legendContainer.appendChild(legendItem);
+});
+
+// Close popup when clicking outside
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".legend-item")) {
+    document.getElementById("legend-popup").style.display = "none";
+  }
+});
+
+// Create Popup
+const popup = document.createElement("div");
+popup.id = "legend-popup";
+document.body.appendChild(popup);
+
