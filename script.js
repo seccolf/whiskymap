@@ -66,7 +66,6 @@ function createCircles() {
 // Dropdown
 document.getElementById("recommendation").addEventListener("click", showComingSoon);
 document.getElementById("whisky-search").addEventListener("click", showComingSoon);
-document.getElementById("technical-info").addEventListener("click", showComingSoon);
 document.getElementById("github").addEventListener("click", showComingSoon);
 
 // Function for dropdown menu click actions

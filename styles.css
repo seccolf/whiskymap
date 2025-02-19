@@ -360,3 +360,46 @@ body {
   display: none;
   z-index: 1100;
 }
+
+/* Markdown Container */
+.markdown-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+/* Style Markdown Headers */
+.markdown-container h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.markdown-container h2 {
+    font-size: 20px;
+    color: #555;
+}
+
+/* Style Markdown Lists */
+.markdown-container ul {
+    padding-left: 20px;
+}
+
+/* Back Button */
+.back-button {
+    display: block;
+    margin: 10px auto;
+    text-align: center;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 16px;
+}
+
+.back-button:hover {
+    text-decoration: underline;
+}
+

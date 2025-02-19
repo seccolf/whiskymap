@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodology</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Keep styles consistent -->
+</head>
+<body>
+    <div class="page-header">
+        <h1>Methodology</h1>
+        <a href="index.html" class="back-button">← Back to Whisky Map</a>
+    </div>
+
+    <div id="markdown-content" class="markdown-container"></div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof marked === "undefined") {
+        console.error("marked.js is not loading.");
+        return;
+    }
+
+    // Markdown Content
+    const markdownText = `
+# Methodology
+## How the Whisky Clustering Works
+
+We analyzed **10,000 whisky reviews** using **Natural Language Processing (NLP)** to extract common flavor notes.  
+Each whisky is represented in a **multi-dimensional flavor space**, and clustering was done using:
+
+- **TF-IDF** to extract important terms from reviews
+- **Principal Component Analysis (PCA)** for dimensionality reduction
+- **K-Means Clustering** to group similar whiskies
+- **Color coding** for easy visualization on the map
+
+### Sources
+- Data collected from whisky review websites
+- NLP techniques adapted from sentiment analysis models
+
+We hope this map helps whisky lovers find new favorites!
+    `;
+
+    document.getElementById("markdown-content").innerHTML = marked.parse(markdownText);
+});
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.12/marked.min.js"></script>
+</body>
+</html>
