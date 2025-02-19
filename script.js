@@ -41,6 +41,19 @@ function createCircles() {
       tooltip.className = "tooltip";
       tooltip.textContent = whisky.name;
       circle.appendChild(tooltip);
+      // Create label for faint whisky name above the circle
+      const label = document.createElement("div");
+      label.className = "whisky-label";
+      label.textContent = whisky.name;
+
+      // Position the label above the circle
+      label.style.position = "absolute";
+      label.style.top = "25px";  // Adjust this if needed
+      label.style.left = "50%";
+      label.style.transform = "translateX(-50%)"; // Center the text
+
+      circle.appendChild(label);
+
 
       // Add event listener for modal popup
       circle.addEventListener("click", () => showModal(whisky));

@@ -305,3 +305,33 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: 1100;
 }
+
+/* Whisky Name Labels */
+.whisky-label {
+  position: absolute;
+  font-size: 10px; /* Small font size */
+  color: rgba(0, 0, 0, 0.3); /* Faint text */
+  text-align: center;
+  width: 100px; /* Set a small width for text centering */
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none; /* Prevents blocking hover/click */
+  transition: color 0.2s ease-in-out;
+}
+
+/* Whisky Name Labels */
+.whisky-label {
+  font-size: 10px; /* Small font */
+  color: rgba(0, 0, 0, 0.2); /* Faint text */
+  text-align: center;
+  width: max-content; /* Adjust width dynamically */
+  white-space: nowrap; /* Prevent text wrapping */
+  pointer-events: none; /* Prevent interference with clicks */
+  transition: color 0.2s ease-in-out;
+}
+
+/* Make label more visible on hover */
+.circle:hover .whisky-label {
+  color: rgba(0, 0, 0, 0.9); /* Darker text on hover */
+  font-weight: bold;
+}
