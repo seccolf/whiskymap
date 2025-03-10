@@ -44,13 +44,13 @@ window.MathJax = {
 
 ## Summary: 
 
-Single malt and blended scotches are clustered by flavor profile in this Whisky Map. Using this map, whisky aficionados can discover malts which are similar to their favorite whiskies (located in the same cluster), or explore novel flavors (different clusters). 
+Single malt and blended scotches are clustered by flavor profile in this Whisky Map. Whisky aficionados can use it to discover malts which are similar to their favorite whiskies (located in the same cluster), or explore novel flavors (different clusters). 
 
-Flavor descriptors — such as fruity, smoky, and sweet — were extracted from r/Scotch (Reddit) posts written by amateur reviewers, then parsed  with NLP tools in Python. These descriptors were aggregated into a flavor vocabulary used by professional sommeliers, reduced via PCA, and finally classified using k-means, producing the distinct clusters shown on the previous page.
+Flavor descriptors — such as fruity, smoky, and sweet — were extracted from r/Scotch (Reddit) posts written by amateur reviewers, then parsed and analyzed with NLP tools in Python. Descriptors were aggregated into a flavor vocabulary used by professional sommeliers, dimensionally reduced via PCA, and finally categorized using k-means. This analysis leads to distinct clusters displayed along the 2 most important principal component dimensions on the previous page.
 
-Three PCA dimensions capture about half of the variance in flavor profiles, leading to seven flavor clusters. These results align closely with [published research](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1740-9713.2009.00337.x), suggesting that **a collective of amateur enthusiasts can discern scotch flavor variations on par with professionally trained sommeliers.** 
+Three PCA dimensions capture just over half of the variance in flavor profiles and produce 7 distinct clusters. These results align closely with [published research](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1740-9713.2009.00337.x), suggesting that **a collective of amateur enthusiasts can discern scotch flavor variations on par with professionally trained sommeliers.** 
 
-Details of the methodology can be found below.
+More details about the methodology can be found below.
 
 ## 1. Collecting the data
 
