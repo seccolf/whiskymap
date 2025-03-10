@@ -42,22 +42,72 @@ window.MathJax = {
 
     const markdownText = `
 
-# Methodology
-## How the Whisky Clustering Works
+## Summary: 
 
-We analyzed **10,000 whisky reviews** using **Natural Language Processing (NLP)** to extract common flavor notes.  
-Each whisky is represented in a **multi-dimensional flavor space**, and clustering was done using:
+Single malt and blended scotches are clustered by flavor profile in this Whisky Map. Using this map, whisky aficionados can discover malts which are similar to their favorite whiskies (located in the same cluster), or explore novel flavors (different clusters). 
 
-- **TF-IDF** to extract important terms from reviews
-- **Principal Component Analysis (PCA)** for dimensionality reduction
-- **K-Means Clustering** to group similar whiskies
-- **Color coding** for easy visualization on the map 
+Flavor descriptors — such as fruity, smoky, and sweet — were extracted from r/Scotch (Reddit) posts written by amateur reviewers, then parsed  with NLP tools in Python. These descriptors were aggregated into a flavor vocabulary used by professional sommeliers, reduced via PCA, and finally classified using k-means, producing the distinct clusters shown on the previous page.
 
-### Sources
-- Data collected from whisky review websites
-- NLP techniques adapted from sentiment analysis models
+Three PCA dimensions capture about half of the variance in flavor profiles, leading to seven flavor clusters. These results align closely with [published research](https://rss.onlinelibrary.wiley.com/doi/full/10.1111/j.1740-9713.2009.00337.x), suggesting that **a collective of amateur enthusiasts can discern scotch flavor variations on par with professionally trained sommeliers.** 
 
-We hope this map helps whisky lovers find new favorites!
+Details of the methodology can be found below.
+
+## 1. Collecting the data
+
+The [r/Scotch](https://www.reddit.com/r/Scotch/) community maintains a [review database](https://docs.google.com/spreadsheets/d/1X1HTxkI6SqsdpNSkSSivMzpxNT-oeTbjFFDdEkXD30o/edit?gid=695409533#gid=695409533) of user posts, which forms the basis of this analysis.
+
+From that data, any Scotch with at least 10 reviews was selected—totaling 130+ whiskies and around 9,000 reviews posted between 2012–2023. This subset includes certain Japanese, Irish and other international whiskies, but excludes American whiskies (bourbon & rye), which will be added later. This choice enables a closer comparison with existing work on the statistics of whisky flavors.
+
+Post text was gathered using [PRAW](https://praw.readthedocs.io/en/stable/), along with upvotes and author karma as rough indicators of community agreement and reviewer expertise. The posts were cleaned and standardized in Python, removing formatting artifacts and flagging incomplete or invalid entries.
+
+
+## 2. Extracting flavor notes
+
+Two different methods were used to convert the unstructured text of each review into a hashmap of flavors associated to their relative intensities: a pipeline based on [spaCy](https://spacy.io/), and queries to GPT through the OpenAI API. The resulting flavor profiles from both methods were tightly correlated (see below).
+
+#### 2.1 NLP with spaCy 
+
+The overall idea of using spaCy was to break reviews into chunks of text (short phrases typically containing a noun modified by other nouns, adjectives & adverbs), filter chunks containing nouns and adjectives that match a standard flavor vocabulary, and finally give a numeric intensity score to the flavors identified, based on how they are modified. This is most simply visualized in an example:
+
+<img src="./images/spacy_example2.png" alt="drawing" width="800"/>
+
+T
+
+
+*using two tools to analyze unstructured text:
+** spacy
+*** define weights, sentence structure, cosine similarity, weighted sum
+
+*defined a standard dictionary (Wishart)
+
+** OpenAI GPT API:
+*** feed text blocks into chatgpt, fine tune the prompt to output a python dictionary
+
+** Benchmark:
+*** both methods were very tightly correlated 
+*** human benchmarking (myself) 
+
+## 3. Defining clusters
+How are the flavor clusters defined?
+* PCA 3D (variance encapsulated)
+* k-means in 3D (groups by "elbow" method, empirical)
+* plot in 2D for simplicity
+
+## 4. Analysis limitations and next steps
+* Sample is biased (imbalanced?) by over-representation of more accessible expressions
+* Noisy estimates for expressions with less reviews (could add error bars)
+* Recommendation system based on actual flavor 
+* Other ML methods? (Ask chatgpt) 
+
+How to interpret the map
+
+-An average of hundreds of hundreds of amateur whisky drinkers is as capable of discenrning tastes as a professinally trained sommelier
+-How do I use this map?
+-I know some of these whiskies and don't agree with the flavor notes and/or clustering
+
+
+
+don't agree with 
 `;
 
     const htmlContent = marked.parse(markdownText);
