@@ -71,43 +71,6 @@ The overall idea of using spaCy was to break reviews into chunks of text (short 
 
 <img src="./images/spacy_example2.png" alt="drawing" width="800"/>
 
-T
-
-
-*using two tools to analyze unstructured text:
-** spacy
-*** define weights, sentence structure, cosine similarity, weighted sum
-
-*defined a standard dictionary (Wishart)
-
-** OpenAI GPT API:
-*** feed text blocks into chatgpt, fine tune the prompt to output a python dictionary
-
-** Benchmark:
-*** both methods were very tightly correlated 
-*** human benchmarking (myself) 
-
-## 3. Defining clusters
-How are the flavor clusters defined?
-* PCA 3D (variance encapsulated)
-* k-means in 3D (groups by "elbow" method, empirical)
-* plot in 2D for simplicity
-
-## 4. Analysis limitations and next steps
-* Sample is biased (imbalanced?) by over-representation of more accessible expressions
-* Noisy estimates for expressions with less reviews (could add error bars)
-* Recommendation system based on actual flavor 
-* Other ML methods? (Ask chatgpt) 
-
-How to interpret the map
-
--An average of hundreds of hundreds of amateur whisky drinkers is as capable of discenrning tastes as a professinally trained sommelier
--How do I use this map?
--I know some of these whiskies and don't agree with the flavor notes and/or clustering
-
-
-
-don't agree with 
 `;
 
     const htmlContent = marked.parse(markdownText);

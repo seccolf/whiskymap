@@ -9,16 +9,8 @@ function convertToScreenCoordinates(x, y) {
   const containerHeight = container.offsetHeight;
 
   // Convert Cartesian coordinates (-5 to 5) to screen coordinates
-  //Lucas: limits are actually: x=[-4.57, 6.80],y=[-2.42, 3.94]
-  //const screenX = (x + 5) / 10 * containerWidth; // Normalize from [-5,5] to [0,1] and scale
-  //const screenY = (5 - y) / 10 * containerHeight; // Reverse y-axis and scale
   const screenX = x  * containerWidth;
   const screenY = y  * containerHeight;
-  //const screenX = x;
-  //const screenY = y;
-  //const screenX = (x + 4.57) / 11.37 * containerWidth; // Normalize from [-5,5] to [0,1] and scale
-  //const screenY = (3.94 - y) / 6.36 * containerHeight;
-  //above hard inputs were all 5 except for 10 in the denominators
   return { screenX, screenY };
 }
 
@@ -48,7 +40,7 @@ function createCircles() {
 
       // Position the label above the circle
       label.style.position = "absolute";
-      label.style.top = "25px";  // Adjust this if needed
+      label.style.top = "25px";
       label.style.left = "50%";
       label.style.transform = "translateX(-50%)"; // Center the text
 
