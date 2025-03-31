@@ -29,10 +29,6 @@ window.MathJax = {
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
 </script>
 
-  <script async id="MathJax-script" 
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-  </script>
-
   <script>
   document.addEventListener("DOMContentLoaded", function() {
     if (typeof marked === "undefined") {
@@ -61,20 +57,76 @@ From that data, any Scotch with at least 10 reviews was selected—totaling 130+
 Post text was gathered using [PRAW](https://praw.readthedocs.io/en/stable/), along with upvotes and author karma as rough indicators of community agreement and reviewer expertise. The posts were cleaned and standardized in Python, removing formatting artifacts and flagging incomplete or invalid entries.
 
 
-## 2. Extracting flavor notes
+## 2. Extracting flavor notes 
 
 Two different methods were used to convert the unstructured text of each review into a hashmap of flavors associated to their relative intensities: a pipeline based on [spaCy](https://spacy.io/), and queries to GPT through the OpenAI API. The resulting flavor profiles from both methods were tightly correlated (see below).
 
 #### 2.1 NLP with spaCy 
 
-The overall idea of using spaCy was to break reviews into chunks of text (short phrases typically containing a noun modified by other nouns, adjectives & adverbs), filter chunks containing nouns and adjectives that match a standard flavor vocabulary, and finally give a numeric intensity score to the flavors identified, based on how they are modified. This is most simply visualized in an example:
+The overall idea of using spaCy was to break reviews into chunks of text (short phrases typically containing a noun modified by other nouns, adjectives & adverbs), filter chunks containing nouns and adjectives that match a standard flavor vocabulary, and finally give a numeric intensity score to the flavors identified, based on how they are modified. 
+
+##### 2.1.1 Breaking text into chunks 
+
+Two methods were used to obtain chunks of text: 
+* *Pattern-matching with reocurring expressions*: iterate over the text looking for expressions following the pattern: (optional determiner, optional adverbs-adjectives-nouns, "of", one or more nouns or adjectives),
+* *spaCy's native base noun phrase finder*: iterate over the text finding all flat phrases that have a noun as their head.    
+
+The first method gives accurate flavors descriptors + modifiers but is limited to the specific phrasal structure, leaving useful information behind. The second method comprehensively finds all nounds, but often misses modifiers. *Ultimately, a combination of both methods including a check to avoid double-counting proved most useful.* 
+
+This is all most simply visualized in an example:
 
 <img src="./images/spacy_example2.png" alt="drawing" width="800"/>
+
+In the example above, pattern-matching breaks the sentence into two chunks: ("A hint of oak", "sweet vanilla"), while the base noun phrase method creates three chunks: ("hint", "oak", "sweet vanilla"). The former works best in this specific example, while the latter disconnects "hint" and "oak". Both options would lead to slightly different weighting for the flavor descriptor "oak" (see 2.1.3).   
+
+##### 2.1.2 Matching flavor descriptors to a standard dictionary
+
+The next step is to select chunks with nouns and modifiers that are actually referring to the flavor of the whiky being reviewed (ignoring for instance sentences where the reviewer describes where they purchased the whisky, etc.). I iterate over chunks and keep only those containing words within a flavor vocabulary of 300+ words designed by [Wishart 2018](https://www.amazon.com/Whisky-Classified-Choosing-Single-Flavour/dp/1911595733).
+
+This vocabulary is extensive and rich, containing relatively common descriptors such as "smoky", "spicy", "sweet" & "fruity" as well as more nuanced flavors picked by reviewers, such as "charcuterie", "oregano", "marmalade", "bergamot", etc.  
+
+##### 2.1.3 Applying weights to descriptors
+
+Having selected only the chunks containing flavors in the vocabulary, the next step is to up- or down-weight the descriptor intensity based on modifiers. A manual inspection of several reviews shows that the most common modifiers used to intensify flavor notes are 'strong', 'intense', 'heavy', 'bold' & 'distinct' (e.g. "strong peat on the palate"), and the most common modifiers used to weaken flavor notes are 'mild', 'weak', 'faint', 'lacking', 'little', 'bit', 'hint' & 'touch' (e.g, "a touch of strawberry").
+
+Every descriptor is initially assigned weight 1 in that review. If the chunk contains modifiers, the descriptor is instead assigned a weight of 0.5, or 1.5 in that review is the modifier is in the weak of strong category respectively.
+
+For any modifiers that don't match any of those listed above, I obtain the cosine similarity between the modifier word vector (embedding) and the vectors representing the list of weak and strong modifiers. The weight finally assigned is 0.5 or 1.5 if the similarity is greater with the weak or strong vector, respectively. 
+
+##### 2.1.4 Aggregating descriptors
+
+The next step is to average over all reviews for a given whisky, summing the weights extracted from each review and dividing by the total number of reviews. For each whisky, this yields a sparse vector of 300+ dimensions (descriptors), each with their total weight.
+
+To reduce the dimensionality of the problem, descriptors are combined into 12 features following Wishart 2018. The rationale behind this is that while reviewers will use many different interpretations based on their subjective experience to describe the flavor of a smoky whisky (e.g., "char", "ash", "bonfire", etc.), they will likely agree on a more coarse-grained feature (e.g., "smoky"). Descriptors are aggregated into the features shown below, and the final data vector for a given whisky is 12-dimensional. 
+
+<img src="./images/flavor_features.png" alt="drawing" width="800"/>
+
+
+#### 2.2 Prompting GPT
+
+To validate the data vector from steps 2.1.x, a subset of reviews was processed using API calls to GPT-3.5. After experimenting with various prompts (including example outputs), the model produced a Python dictionary of descriptive terms — beyond the 300+ standard keywords — and their numeric intensity scores.
+
+Descriptors matching the standard dictionary (section 2.1.2) were retained. For descriptors with no direct matches, the closest keyword was identified by maximizing the cosine similarity between the GPT-generated term and the dictionary’s entries.
+
+The resulting 300+ sparse vector averaged over reviews was then reduced to the 12 features as described above. 
+
+#### 2.3 Agreement between the two methods
+
+Results from both the NLP pipeline (Section 2.1.x) and the GPT-based approach for an example malt are shown below, demonstrating strong concordance.
+
+In particular, the correlation coefficient $\\rho_{NLP,GPT}$  between the two resulting feature vectors exceeds 95% for all whiskies tested. For example, if one method predicts a higher "smoky" score than "fruity," the other method consistently does the same.
+
+Variations in absolute scores arise because GPT captures nearly every descriptor in the text, assigning higher overall weights. The NLP pipeline—due to its chunk-based pattern matching—can miss expressions that deviate from typical linguistic structures, resulting in lower overall scores.
+
+
+## 3. Principal Component Analysis (PCA)
+
 
 `;
 
     const htmlContent = marked.parse(markdownText);
     document.getElementById("markdown-content").innerHTML = htmlContent;
+    MathJax.typesetPromise();
 
     // MathJax will detect any LaTeX in the rendered HTML and typeset automatically.
   });
