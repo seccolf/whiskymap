@@ -56,8 +56,8 @@ function createCircles() {
 }
 
 // Dropdown
-document.getElementById("recommendation").addEventListener("click", showComingSoon);
-document.getElementById("whisky-search").addEventListener("click", showComingSoon);
+//document.getElementById("recommendation").addEventListener("click", showComingSoon); //to be completed later
+//document.getElementById("whisky-search").addEventListener("click", showComingSoon); //to be completed later
 document.getElementById("github").addEventListener("click", showComingSoon);
 
 // Function for dropdown menu click actions
